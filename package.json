@@ -9,7 +9,12 @@
     "jest": "jest --watch",
     "watch": "webpack --watch"
   },
-  "keywords": ["react", "form", "forms", "state"],
+  "keywords": [
+    "react",
+    "form",
+    "forms",
+    "state"
+  ],
   "author": "alanzanattadev",
   "license": "ISC",
   "devDependencies": {
