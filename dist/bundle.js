@@ -15931,8 +15931,9 @@ function getNewValidation(acc, next) {
   }
 }
 
-function Form(_ref) {
-  var _ref$applyControl = _ref.applyControl,
+function Form() {
+  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+      _ref$applyControl = _ref.applyControl,
       applyControl = _ref$applyControl === undefined ? function (state) {
     return state;
   } : _ref$applyControl,
