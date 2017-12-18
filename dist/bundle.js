@@ -15573,8 +15573,8 @@ function FormElement() {
         value: function render() {
           var _this5 = this;
 
-          var value = this.state.value === undefined && this.props.value !== undefined ? this.props.value : this.state.value;
-          var validation = this.state.validation === undefined && this.props.validation !== undefined ? this.props.validation : this.state.validation;
+          var value = this.state.value == undefined && this.props.value !== undefined ? this.props.value : this.state.value;
+          var validation = this.state.validation == undefined && this.props.validation !== undefined ? this.props.validation : this.state.validation;
           var statePath = this.getCurrentStatePath(this.props, this.context);
           if (this.isControlled(this.props, this.context)) {
             return React.createElement(WrappedComponent, _extends({}, Object.assign({}, this.props, {
