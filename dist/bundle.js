@@ -15292,8 +15292,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -15453,29 +15451,8 @@ function FormElement() {
           }
         }
       }, {
-        key: "connectToUncontrolledHandlers",
-        value: function connectToUncontrolledHandlers(props,
-        // $FlowFixMe
-        context) {
-          var _this4 = this;
-
-          if (props.elementName && context.addHandler && !this.isControlled(props, context)) {
-            if (getUncontrolledValue == null || setUncontrolledValue == null) {
-              console.warn(this.getHumanReadableIdentifier(props, context) + " is uncontrolled but has no getValue / setValue defined, thus it is disabled and not connected");
-            } else {
-              context.addHandler(this.getCurrentStatePath(props, context), function () {
-                return root ? _this4.getUncontrolledState() : getUncontrolledValue && getUncontrolledValue(_this4.child);
-              }, function (value) {
-                return root ? // $FlowFixMe
-                _this4.child.dispatchUncontrolledValues({ value: value }) : setUncontrolledValue && setUncontrolledValue(_this4.child, value);
-              });
-            }
-          }
-        }
-      }, {
         key: "componentDidMount",
         value: function componentDidMount() {
-          this.connectToUncontrolledHandlers(this.props, this.context);
           this.connectToFormController(this.props, this.context);
         }
 
@@ -15571,44 +15548,34 @@ function FormElement() {
       }, {
         key: "render",
         value: function render() {
-          var _this5 = this;
+          var _this4 = this;
 
           var value = this.state.value == undefined && this.props.value !== undefined ? this.props.value : this.state.value;
           var validation = this.state.validation == undefined && this.props.validation !== undefined ? this.props.validation : this.state.validation;
           var statePath = this.getCurrentStatePath(this.props, this.context);
           if (this.isControlled(this.props, this.context)) {
-            return React.createElement(WrappedComponent, _extends({}, Object.assign({}, this.props, {
+            return React.createElement(WrappedComponent, Object.assign({}, this.props, {
               value: value,
               validation: validation,
               valueChangeObs: this.valueChangeObs,
               rootValueChangeObs: this.context.rootValueChangeObs ? this.context.rootValueChangeObs : this.valueChangeObs,
               onChange: this.props.onChange != null ? function (newValue, sp) {
                 // $FlowFixMe
-                _this5.props.onChange(newValue, sp !== undefined ? sp : statePath, validate(newValue, _this5.props));
+                _this4.props.onChange(newValue, sp !== undefined ? sp : statePath, validate(newValue, _this4.props));
               } : function (newValue, sp) {
-                _this5.context.onStateChange(newValue, sp !== undefined ? sp : statePath, validate(newValue, _this5.props));
+                _this4.context.onStateChange(newValue, sp !== undefined ? sp : statePath, validate(newValue, _this4.props));
               },
               statePath: statePath,
               getValue: root ? function () {
-                return _this5.value;
+                return _this4.value;
               } : undefined
-            }), {
-              // $FlowFixMe
-              ref: function ref(elem) {
-                return _this5.child = elem;
-              }
             }));
           } else {
-            return React.createElement(WrappedComponent, _extends({}, Object.assign({}, this.props, {
+            return React.createElement(WrappedComponent, Object.assign({}, this.props, {
               statePath: statePath,
               getValue: root ? function () {
-                return _this5.value;
+                return _this4.value;
               } : undefined
-            }), {
-              // $FlowFixMe
-              ref: function ref(elem) {
-                return _this5.child = elem;
-              }
             }));
           }
         }
