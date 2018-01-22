@@ -1,6 +1,6 @@
 {
   "name": "react-forms-state",
-  "version": "3.0.0-beta1-6",
+  "version": "3.0.0-beta1-7",
   "description": "React helpers to quickly make forms",
   "main": "dist/bundle.js",
   "scripts": {
