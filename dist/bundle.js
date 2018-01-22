@@ -15221,6 +15221,9 @@ function StateDispatcher() {
             }.bind(this)
           };
         }
+
+        // Can probably go
+
       }, {
         key: "getUncontrolledState",
         value: function getUncontrolledState() {
@@ -15270,10 +15273,6 @@ function StateDispatcher() {
 
     return (0, _FormElement2.default)({
       root: true,
-      // $FlowFixMe
-      getUncontrolledValue: function getUncontrolledValue(child) {
-        return child.getUncontrolledState();
-      },
       setUncontrolledValue: function setUncontrolledValue(child) {}
     })(Dispatcher);
   };
@@ -15335,9 +15334,7 @@ function FormElement() {
       _ref$validate = _ref.validate,
       validate = _ref$validate === undefined ? function () {
     return true;
-  } : _ref$validate,
-      getUncontrolledValue = _ref.getUncontrolledValue,
-      setUncontrolledValue = _ref.setUncontrolledValue;
+  } : _ref$validate;
 
   return function FormElementHOC(WrappedComponent) {
     var FormElementContainer = function (_React$Component) {
@@ -15422,7 +15419,7 @@ function FormElement() {
         context) {
           var _this3 = this;
 
-          if (this.valueChangeObs && this.isControlled(props, context)) {
+          if (this.valueChangeObs) {
             this.disconnectFromFormController();
             this.subscription = this.valueChangeObs.subscribe(function (e) {
               if (props.__debug) {
@@ -15517,13 +15514,6 @@ function FormElement() {
           if (props.valueChangeObs == null && context.completeStatePath && context.completeStatePath !== "" && props.elementName) return context.completeStatePath + "." + this.getNewCompletePathPart(props, context, value);else if (props.elementName) return this.getNewCompletePathPart(props, context, value);else if (props.valueChangeObs == null && context.completeStatePath) return context.completeStatePath;else return "";
         }
       }, {
-        key: "isControlled",
-        value: function isControlled(props,
-        // $FlowFixMe
-        context) {
-          return props.uncontrolled || context.uncontrolled ? false : true;
-        }
-      }, {
         key: "getStatePathToDispatch",
         value: function getStatePathToDispatch(props,
         // $FlowFixMe
@@ -15535,8 +15525,7 @@ function FormElement() {
         value: function getChildContext() {
           return {
             statePath: this.getStatePathToDispatch(this.props, this.context),
-            completeStatePath: this.getCompleteCurrentStatePath(this.props, this.context),
-            uncontrolled: this.isControlled(this.props, this.context) === false
+            completeStatePath: this.getCompleteCurrentStatePath(this.props, this.context)
           };
         }
       }, {
@@ -15553,31 +15542,22 @@ function FormElement() {
           var value = this.state.value == undefined && this.props.value !== undefined ? this.props.value : this.state.value;
           var validation = this.state.validation == undefined && this.props.validation !== undefined ? this.props.validation : this.state.validation;
           var statePath = this.getCurrentStatePath(this.props, this.context);
-          if (this.isControlled(this.props, this.context)) {
-            return React.createElement(WrappedComponent, Object.assign({}, this.props, {
-              value: value,
-              validation: validation,
-              valueChangeObs: this.valueChangeObs,
-              rootValueChangeObs: this.context.rootValueChangeObs ? this.context.rootValueChangeObs : this.valueChangeObs,
-              onChange: this.props.onChange != null ? function (newValue, sp) {
-                // $FlowFixMe
-                _this4.props.onChange(newValue, sp !== undefined ? sp : statePath, validate(newValue, _this4.props));
-              } : function (newValue, sp) {
-                _this4.context.onStateChange(newValue, sp !== undefined ? sp : statePath, validate(newValue, _this4.props));
-              },
-              statePath: statePath,
-              getValue: root ? function () {
-                return _this4.value;
-              } : undefined
-            }));
-          } else {
-            return React.createElement(WrappedComponent, Object.assign({}, this.props, {
-              statePath: statePath,
-              getValue: root ? function () {
-                return _this4.value;
-              } : undefined
-            }));
-          }
+          return React.createElement(WrappedComponent, Object.assign({}, this.props, {
+            value: value,
+            validation: validation,
+            valueChangeObs: this.valueChangeObs,
+            rootValueChangeObs: this.context.rootValueChangeObs ? this.context.rootValueChangeObs : this.valueChangeObs,
+            onChange: this.props.onChange != null ? function (newValue, sp) {
+              // $FlowFixMe
+              _this4.props.onChange(newValue, sp !== undefined ? sp : statePath, validate(newValue, _this4.props));
+            } : function (newValue, sp) {
+              _this4.context.onStateChange(newValue, sp !== undefined ? sp : statePath, validate(newValue, _this4.props));
+            },
+            statePath: statePath,
+            getValue: root ? function () {
+              return _this4.value;
+            } : undefined
+          }));
         }
       }]);
 
@@ -15588,7 +15568,6 @@ function FormElement() {
 
 
     FormElementContainer.defaultProps = {
-      uncontrolled: false,
       elementName: WrappedComponent.defaultProps && WrappedComponent.defaultProps.elementName || undefined
     };
 
@@ -15598,14 +15577,12 @@ function FormElement() {
       valueChangeObs: _propTypes2.default.any,
       onStateChange: _propTypes2.default.func,
       addHandler: _propTypes2.default.func,
-      uncontrolled: _propTypes2.default.bool,
       rootValueChangeObs: _propTypes2.default.any
     };
 
     FormElementContainer.childContextTypes = {
       statePath: _propTypes2.default.string,
-      completeStatePath: _propTypes2.default.string,
-      uncontrolled: _propTypes2.default.bool
+      completeStatePath: _propTypes2.default.string
     };
 
     return FormElementContainer;
@@ -28116,7 +28093,7 @@ function convertIn(jobs) {
       var inPath = job.in.split(".");
       var outPath = job.out.split(".");
       var notConvertedValue = inPath.length === 1 && inPath[0] === "" ? immutableValue : immutableValue.getIn(inPath, red.getIn(outPath, job.default));
-      var inValue = typeof job.convertIn === "function" ? job.convertIn(notConvertedValue, props) : notConvertedValue;
+      var inValue = typeof job.convertIn === "function" ? job.convertIn(notConvertedValue, props, immutableValue) : notConvertedValue;
       var newRed = void 0;
       if (red.getIn(outPath) != null && inValue != null && inValue !== false || outPath.length === 1 && outPath[0] === "") newRed = red;else {
         newRed = red.setIn(outPath, (0, _immutable.fromJS)(inValue));
@@ -28146,7 +28123,7 @@ function convertOut(jobs) {
     var convertedValue = jobs.reduceRight(function (red, job) {
       var outPath = job.out.split(".");
       var notConvertedValue = immutableValue.getIn(outPath);
-      var outValue = typeof job.convertOut === "function" ? job.convertOut(notConvertedValue, props) : notConvertedValue;
+      var outValue = typeof job.convertOut === "function" ? job.convertOut(notConvertedValue, props, immutableValue) : notConvertedValue;
       if (outValue === undefined) {
         return red;
       }
