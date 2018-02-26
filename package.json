@@ -2,10 +2,11 @@
   "name": "react-forms-state",
   "version": "3.0.0-beta1-8",
   "description": "React helpers to quickly make forms",
-  "main": "dist/bundle.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "jest",
-    "build": "webpack",
+    "build": "NODE_ENV=production babel ./lib --ignore *.snap --ignore *.test.js --out-dir ./dist",
+    "build:umd": "webpack",
     "jest": "jest --watch",
     "watch": "webpack --watch"
   },
@@ -18,6 +19,7 @@
   "author": "alanzanattadev",
   "license": "ISC",
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-jest": "^21.2.0",
     "babel-loader": "^7.1.2",
